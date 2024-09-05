@@ -1,8 +1,8 @@
-import { Inter } from "next/font/google";
+import { Inter,Outfit } from "next/font/google";
 import {ClerkProvider, GoogleOneTap} from "@clerk/nextjs"
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Outfit({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Create Next App",

@@ -3,6 +3,8 @@ import Image from 'next/image'
 import React from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link';
+import { Progress } from "@/components/ui/progress"
+
 import {HiOutlineHome, HiOutlinePower, HiOutlineShieldCheck, HiOutlineSquare3Stack3D} from "react-icons/hi2"
 
 function SideBar() {
@@ -40,13 +42,18 @@ function SideBar() {
       <ul>
           {Menu.map((item) => (
               <Link href={item.path} key={item.id} passHref>
-                  <li className={`flex items-center gap-4 my-2 text-gray-600 p-3 cursor-pointer hover:bg-gray-100 hover:text-black rounded-lg ${item.path==path && `bf-gray-100 text-black`}`}>
+                  <li className={`flex items-center gap-4 my-2 text-gray-600 p-3 cursor-pointer hover:bg-gray-100 hover:text-black rounded-lg mb-3 ${item.path==path && `bg-gray-100 text-black`}`}>
                       <div className='text-2xl'>{item.icon}</div>
                       <h2>{item.name}</h2>
                   </li>
               </Link>
             ))}
       </ul>
+      <div className='absolute bottom-10 w-[80%]'>
+        <Progress value={33}/>
+        <h2 className='text-sm my-2'>3 out of 5 Cource created</h2>
+        <h2 className='text-xs text-gray-500'>Upgrade your plan for unlimited course generation</h2>
+      </div>
     </div>
   )
 }
