@@ -73,7 +73,7 @@ function SelectOptions() {
             <label className='text-sm'>No. of Chapter</label>
             <Input type="numbers" className='h-14 text-lg'
             defaultValue={userCourseInput?.no0fChapter}
-                onChange={(event)=>handleInputChange('no0fChapter', event.target.value)}
+                onChange={(event)=>handleInputChange('noOfChapter', event.target.value)}
             />
         </div>
       </div>
