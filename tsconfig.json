@@ -16,15 +16,18 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "baseUrl": ".",  // <-- Add this line
-    "paths": {       // <-- Add this block
-      "@/*": ["./*"]
+    "baseUrl": ".", // <-- Add this line
+    "paths": { // <-- Add this block
+      "@/*": [
+        "./*"
+      ]
     },
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "next-env.d.ts",

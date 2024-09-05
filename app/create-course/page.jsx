@@ -1,11 +1,11 @@
 'use client'
-import React,{useState} from 'react'
+import React,{useState, useContext, useEffect} from 'react'
 import { HiClipboardDocumentCheck, HiLightBulb, HiMiniSquares2X2 } from 'react-icons/hi2' 
 import { Button } from '@/components/ui/button';
 import SelectCategory from './_components/SelectCategory';
 import TopicDescription from './_components/TopicDescription';
 import SelectOptions from './_components/SelectOptions';
-
+import { UserInputContext } from '../_context/UserInputContext';
 
 
 function CreateCourse() {
@@ -27,7 +27,32 @@ function CreateCourse() {
     }
   ]
 
+  const {userCourseInput, setUserCourseInput} = useContext(UserInputContext);
+
   const [activeIndex,setActiveIndex]=useState(0);
+
+  useEffect (() => {
+    console.log(userCourseInput)
+  },[userCourseInput])
+
+// used to check Next button enable or disable status
+
+  const checkStatus=()=>{
+    if(userCourseInput?.length==0)
+      {
+      return true;
+    }
+    if(activeIndex == 0 && (userCourseInput?.category?.length == 0 || userCourseInput?.category == undefined)){
+      return true;
+    }
+    if(activeIndex == 1 && (userCourseInput?.topic?.length == 0 || userCourseInput?.topic == undefined )){
+      return true;
+    }
+    else if(activeIndex == 2 && (userCourseInput?.level == undefined || userCourseInput?.duration == undefined || userCourseInput?.displayVideo == undefined || userCourseInput?.noOfChapter == undefined )){
+      return true;
+    }
+    return false;
+  }
   return (
     <div>
       {/* Stepper */}
@@ -55,12 +80,12 @@ function CreateCourse() {
         {/* Next previous Button */}
         <div className='flex justify-between mt-10'>
           <Button variant='outline' disabled={activeIndex==0} onClick={()=>setActiveIndex(activeIndex-1)}>Previous</Button>
-          {activeIndex<2 && <Button className='bg-green-600' onClick={()=>setActiveIndex(activeIndex+1)}>Next</Button>}
-          {activeIndex==2 && <Button className='bg-green-600' onClick={()=>setActiveIndex(activeIndex+1)}>Generate Course Layout</Button>}
+          {activeIndex<2 && <Button disabled={checkStatus()} className='bg-green-600' onClick={()=>setActiveIndex(activeIndex+1)}>Next</Button>}
+          {activeIndex==2 && <Button disabled={checkStatus()} className='bg-green-600' onClick={()=>setActiveIndex(activeIndex+1)}>Generate Course Layout</Button>}
         </div>
         </div>
     </div>
   )
 }
 
-export default CreateCourse
+export default CreateCourse;
