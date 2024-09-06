@@ -37,7 +37,8 @@ function EditCourseBasicInfo({course}) {
             courseOutput:course?.courseOutput
         }).where(eq(CourseList.courseId,course.courseId))
         .returning({courseId:CourseList.courseId});
-        
+
+        window.location.reload();
     }
 
   return (

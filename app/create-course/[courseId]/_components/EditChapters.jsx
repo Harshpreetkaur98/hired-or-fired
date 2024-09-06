@@ -3,6 +3,7 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -14,21 +15,30 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 
+import {db} from '@/configs/db'
+import { CourseList } from '@/configs/schema'
+import { eq } from 'drizzle-orm'
+
 function EditChapters({course, index}) {
 
-    const Chapters = course?.courseOutput?.chapter;
+    const Chapters = course?.courseOutput?.chapters;
     const [name, setName] = useState();
     const [about, setAbout] = useState();
 
     useEffect(() => {
-        setName(Chapters[index].name);
-        setName(Chapters[index].about);
-    })
+      setName(Chapters[index]?.chapter_name);
+      setAbout(Chapters[index]?.about);
+    },[course])
 
-    const onUpdateHandler = () => {
-        course.courseOutput.course.chapter[index].name = name;
-        course.courseOutput.course.chapter[index].about = about;
-        console.log(course);
+    const onUpdateHandler = async() => {
+        Chapters[index].chapter_name = name;
+        Chapters[index].about = about;
+        const result=await db.update(CourseList).set({
+          courseOutput:course?.courseOutput
+        }).where(eq(CourseList.courseId,course.courseId))
+        .returning({courseId:CourseList.courseId});
+
+        window.location.reload();
     }
 
   return (
@@ -40,12 +50,12 @@ function EditChapters({course, index}) {
       <DialogDescription>
       <div className='mt-3'>
             <label>Course Title</label>
-            <Input defaultValue={Chapters[index].name}
+            <Input defaultValue={name}
             onChange={(event)=>setName(event.target.value)}/>
       </div>
        <div>
            <label>Description</label>
-           <Textarea className='h-40' defaultValue={Chapters[index].about} 
+           <Textarea className='h-40' defaultValue={about} 
            onChange={(event)=>setAbout(event.target.value)}/>
        </div>
       </DialogDescription>

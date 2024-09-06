@@ -12,7 +12,7 @@ function ChapterList({course}) {
                 <div key={index} className='flex gap-5 items-center'>
                     <h2 className='bg-green-700 flex-none h-10 w-10 text-white rounded-full text-center p-2'>{index+1}</h2>
                     <div>
-                        <h2 className='font-medium text-lg'>{chapter?.name}<EditChapters course={course} index={index} /></h2>
+                        <h2 className='font-medium text-lg'>{chapter?.chapter_name}<EditChapters course={course} index={index} /></h2>
                         <p className='text-sm text-gray-500'>{chapter?.about}</p>
                         <p className='flex gap-2 text-green-700 mt-3 items-center'> <HiOutlineClock/>{chapter?.duration}</p>
                     </div>
