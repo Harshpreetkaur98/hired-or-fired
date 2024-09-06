@@ -8,6 +8,11 @@ import SelectOptions from './_components/SelectOptions';
 import { UserInputContext } from '../_context/UserInputContext';
 import {GenerateCourseLayout_AI} from '@/configs/AiModel';
 import LoadingDialog from './_components/LoadingDialog';
+import {db} from '@/configs/db';
+import { useUser } from '@clerk/nextjs';
+import {CourseList} from '@/configs/schema';
+import { useRouter } from 'next/navigation';
+
 
 
 function CreateCourse() {
@@ -32,6 +37,8 @@ function CreateCourse() {
   const {userCourseInput, setUserCourseInput} = useContext(UserInputContext);
   const [loading,setLoading]=useState(false);
   const [activeIndex,setActiveIndex]=useState(0);
+  const{user}=useUser();
+  const router=useRouter();
 
   useEffect (() => {
     // console.log(userCourseInput)
@@ -57,7 +64,7 @@ function CreateCourse() {
   }
 
   const GenerateCourseLayout=async()=>{
-    setLoading(false);
+    setLoading(true);
     const BASIC_PROMPT='Generate A Course Tutorial on following detail with course Name, description, along with Chapter Name, about, duration:';
     const USER_INPUT_PROMPT='Category:'+userCourseInput?.category+',Topic:'+userCourseInput?.topic+', Level: '+userCourseInput?.level+', Duration:'+userCourseInput?.duration+', NoOfChapters:'+userCourseInput?.noOfChapter+' , in json format';
     const FINAL_PROMPT=BASIC_PROMPT+USER_INPUT_PROMPT;
@@ -66,7 +73,27 @@ function CreateCourse() {
     console.log(result.response?.text());
     console.log(JSON.parse(result.response?.text()));
     setLoading(false);
+    SaveCourseLayoutInDb(JSON.parse(result.response?.text()));
   }
+
+  const SaveCourseLayoutInDb=async(courseLayout)=>{
+    var id=crypto.randomUUID();
+    setLoading(true)
+    const result=await db.insert(CourseList).values({
+      courseId:id,
+      name:userCourseInput?.topic,
+      level:userCourseInput?.level,
+      category:userCourseInput?.category,
+      courseOutput:courseLayout,
+      createdBy:user?.primaryEmailAddress?.emailAddress,
+      userName:user?.fullName,
+      userProfileImage:user?.imageUrl
+    })
+    console.log("finish")
+    setLoading(false)
+    router.replace('/create-course/'+id)
+  }
+
   return (
     <div>
       {/* Stepper */}
