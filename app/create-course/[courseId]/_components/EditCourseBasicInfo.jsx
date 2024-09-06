@@ -25,9 +25,9 @@ function EditCourseBasicInfo({course}) {
     const [description,setDescription]=useState();
 
     useEffect(()=>{
-        setName(course?.courseOutput?.course_name);
+        setName(course?.courseOutput?.name);
         setDescription(course?.courseOutput?.description);
-    }, [course])
+    }, [course]) 
 
     const onUpdateHandler=async()=>{
         course.courseOutput.course_name=name;
@@ -51,11 +51,13 @@ function EditCourseBasicInfo({course}) {
                 <DialogDescription>
                     <div className='mt-3'>
                         <label>Course Title</label>
-                        <Input defaultValue={name} onChange={(event)=>setName(event.target.value)}/>
+                        <Input defaultValue={course?.courseOutput?.course?.name} 
+                        onChange={(event)=>setName(event.target.value)}/>
                     </div>
                     <div>
                         <label>Description</label>
-                        <Textarea className='h-40' defaultValue={description} onChange={(event)=>setDescription(event.target.value)}/>
+                        <Textarea className='h-40' defaultValue={course?.courseOutput?.course?.description} 
+                        onChange={(event)=>setDescription(event.target.value)}/>
                     </div>
                 </DialogDescription>
             </DialogHeader>
