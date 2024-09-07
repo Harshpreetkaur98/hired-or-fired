@@ -1,17 +1,23 @@
 'use client'
 import { db } from '@/configs/db';
-import { CourseList } from '@/configs/schema';
+import { Chapters, CourseList } from '@/configs/schema';
 import { useUser } from '@clerk/nextjs'
 import {and, eq } from 'drizzle-orm'
 import React, { useEffect, useState } from 'react'
 import CourseBasicInfo from './_components/CourseBasicInfo'
 import CourseDetail from './_components/CourseDetail'
 import ChapterList from './_components/ChapterList'
+import { Button } from '@/components/ui/button';
+import LoadingDialog from '../_components/LoadingDialog';
+import { GenerateChapterContent_AI } from '@/configs/AiModel';
+import service from '@/configs/service'
+import { useRouter } from 'next/navigation';
 
 function CourseLayout({params}) {
     const {user}=useUser();
     const [course,setCourse]=useState([]);
     const [loading, setLoading] = useState(false);
+    const router=useRouter();
 
     useEffect(()=>{
         params&&GetCourse();
@@ -26,25 +32,44 @@ function CourseLayout({params}) {
 
     const GenerateChapterContent=()=>{
       setLoading(true);
-      const chapters = course?.courseOutput?.course?.chapters;
+      const chapters = course?.courseOutput?.chapters;
       chapters.forEach(async(chapter, index) => {
-        const PROMPT = 'Explain the concept in detail on Topic: '+course?.name+' , Chapter: '+chapter?.name+', in JSON format with list of array with field as title, explanation on given chapter in detail, Code example(code field in <precode> format) if applicable';
+        const PROMPT = 'Explain the concept in detail on Topic: '+course?.name+' , Chapter: '+chapter?.chapter_name+', in JSON format with list of array with field as title, explanation on given chapter in detail, Code example(code field in <precode> format) if applicable';
         console.log(PROMPT);
-        if(index > 3){
+        // if(index < 3){
           try{
+            let videoId=''
+             // Generate Video URL
+             service.getVideos(course.name+':'+chapter?.chapter_name).then(resp=>{
+              console.log(resp);
+              videoId=resp[0]?.id?.videoId;
+
+            })
+
+            //generate chapter content
             const result =await GenerateChapterContent_AI.sendMessage(PROMPT);
             console.log(result?.response?.text());
-            // Generate Video URL
-
+            const content=JSON.parse(result?.response?.text())
 
             //  Save chapter Content + Video URL
+            await db.insert(Chapters).values({
+              chapterId:index,
+              courseId:course?.courseId,
+              content:content,
+              videoId:videoId,
+            })
             setLoading(false);
 
           }catch(e){
             setLoading(false);
             console.log(e)
           }
-        }
+
+          await db.update(CourseList).set({
+            publish:true
+          })
+          router.replace('/create-course/'+course?.courseId+'/finish')
+        // }
       })
     }
   return (
@@ -53,11 +78,11 @@ function CourseLayout({params}) {
 
       <LoadingDialog loading={loading} />
       {/* Basic Info */}
-      <CourseBasicInfo course={course}/>
+      <CourseBasicInfo course={course} refreshData={()=>GetCourse()}/>
       {/* Course Detail */}
       <CourseDetail course={course}/>
       {/* List of Lesson */}
-      <ChapterList course={course}/>
+      <ChapterList course={course} refreshData={()=>GetCourse()}/>
 
       <Button onClick={GenerateChapterContent} className="my-10" >Generate Course Content</Button>
     </div>

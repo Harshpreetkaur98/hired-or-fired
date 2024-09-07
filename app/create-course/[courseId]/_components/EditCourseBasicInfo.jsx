@@ -19,7 +19,7 @@ import { CourseList } from '@/configs/schema'
 import { eq } from 'drizzle-orm'
   
 
-function EditCourseBasicInfo({course}) {
+function EditCourseBasicInfo({course,refreshData}) {
 
     const [name,setName]=useState();
     const [description,setDescription]=useState();
@@ -38,7 +38,7 @@ function EditCourseBasicInfo({course}) {
         }).where(eq(CourseList.courseId,course.courseId))
         .returning({courseId:CourseList.courseId});
 
-        window.location.reload();
+        refreshData(true);
     }
 
   return (

@@ -45,7 +45,7 @@ const {
       ],
     });
 
-    const GenerateChapterContent_AI = model.startChat({
+    export const GenerateChapterContent_AI = model.startChat({
       generationConfig,
       history: [
         {
