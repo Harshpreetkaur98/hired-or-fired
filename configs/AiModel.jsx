@@ -44,3 +44,21 @@ const {
         },
       ],
     });
+
+    const GenerateChapterContent_AI = model.startChat({
+      generationConfig,
+      history: [
+        {
+          role: "user",
+          parts: [
+            {text: "\nExplain the concept in detail on Topic: Python Basic, Chapter: Variable in Python, in JSON format with list of array with field as title, explanation on given chapter in detail, Code example(code field in <precode> format) if applicable"},
+          ],
+        },
+        {
+          role: "model",
+          parts: [
+            {text: "```json\n{\n  \"title\": \"Variables in Python\",\n  \"explanation\": \"Variables are used to store data values in Python. A variable is created when you assign a value to it. You can think of variables as containers that hold information. In Python, variables can store different types of data, such as numbers, strings, lists, dictionaries, and more. To create a variable, you need to provide a name for it and assign a value to it using the assignment operator (=). For example, you can create a variable called 'x' and assign the value 10 to it by writing 'x = 10'. After creating a variable, you can use it in your code to perform operations, store results, and manipulate data. Variables in Python are dynamic, which means you don't need to specify the data type when creating a variable. Python automatically determines the data type based on the value assigned to the variable. This flexibility makes Python a versatile and easy-to-use programming language for beginners and experienced developers alike.\",\n  \"code\": \"# Example of creating and using variables in Python\nx = 10\ny = 'Hello, World!'\n\nprint(x)  # Output: 10\nprint(y)  # Output: Hello, World!\"\n}\n```"},
+          ],
+        }
+      ]
+    });
