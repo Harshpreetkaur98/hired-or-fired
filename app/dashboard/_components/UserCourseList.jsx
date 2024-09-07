@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm'
 import { useUser } from '@clerk/nextjs'
 import CourseCard from './CourseCard'
 import { UserCourseListContext } from '@/app/_context/UserCourseListContent'
-
+import { index } from 'drizzle-orm/sqlite-core'
 
 function UserCourseList() {
 
@@ -32,9 +32,15 @@ function UserCourseList() {
       <h2 className='font-medium text-xl'>My AI Courses</h2>
 
       <div className='grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5'>
-        {courseList?.map((course,index)=>(
-          <CourseCard course={course} key={index} refreshData={()=>getUserCourses()}/>
-        ))}
+      {courseList?.length > 0 ? (
+          courseList.map((course, index) => (
+            <CourseCard course={course} key={index} refreshData={() => getUserCourses()} />
+          ))
+        ) : (
+          [1, 2, 3, 4, 5].map((item, index) => (
+            <div key={index} className='w-full bg-slate-200 animate-pulse rounded-lg h-[270px]'></div>
+          ))
+        )}
       </div>
     </div>
   )
