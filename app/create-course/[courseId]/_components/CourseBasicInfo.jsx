@@ -1,10 +1,39 @@
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import { HiOutlinePuzzlePiece } from 'react-icons/hi2'
 import {Button} from '@/components/ui/button'
 import EditCourseBasicInfo from '../_components/EditCourseBasicInfo'
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import {storage} from '@/configs/firebaseConfig'
+import { eq } from 'drizzle-orm'
+
 
 function CourseBasicInfo({course}) {
+
+  const [selectedFile, setSelectedFile] = useState();
+
+
+  // Select file and upload to filebase storage.
+
+  const onFileSelected=async(event)=> {
+    const file = event.target.files[0];
+    setSelectedFile(URL.createObjectURL(file));
+
+    const fileName = Date.now() + '.jpg';
+    const storageRef = ref(storage, 'ai-course/' + fileName);
+    await uploadBytes(storageRef, file).then((snapshot) => {
+      console.log('Upload file completed.')
+    }).then(resp=>{
+      getDownloadURL(storageRef).then(async(downloadUrl) => {
+        console.log(downloadUrl);
+        await db.update(CourseList).set({
+          courseBanner:downloadUrl
+        }).where(eq(CourseList.id, course?.id))
+      })
+    })
+    
+  }
+
   return (
     <div className='p-10 border rounded-xl shadow-sm mt-5'>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
@@ -14,9 +43,12 @@ function CourseBasicInfo({course}) {
             <h2 className='font-medium mt-5 flex gap-2 items-center text-green-600'><HiOutlinePuzzlePiece/>{course?.category}</h2>
             <Button className="w-full bg-green-700 hover:bg-green-900 mt-10">Start</Button>
         </div>
-        <div className='bg-blue-100 flex justify-center rounded-xl h-[250px] object-center'>
-            <Image src={'/placeholder.png'} width={300} height={300}/>
-
+        <div className='bg-blue-100 flex justify-center rounded-xl h-[250px] object-center cursor-pointer'>
+          <label htmlFor='upload-image'>
+            <Image src={selectedFile?selectedFile:'/placeholder.png'} width={300} height={300}/>
+            <input type="file"  id="upload-image" 
+            className="opacity-0" onChange={onFileSelected} />
+`         </label>
         </div>
       </div>
     </div>
