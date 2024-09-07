@@ -1,16 +1,19 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {db} from '@/configs/db'
 import {CourseList} from '@/configs/schema'
 import { eq } from 'drizzle-orm'
 import { useUser } from '@clerk/nextjs'
 import CourseCard from './CourseCard'
+import { UserCourseListContext } from '@/app/_context/UserCourseListContent'
 
 
 function UserCourseList() {
 
-  const {user}=useUser();
   const [courseList,setCourseList]=useState();
+  const {UserCourseList, setUserCourseList} = useContext(UserCourseListContext);
+  const {user}=useUser();
+
 
   useEffect(()=>{
     user&&getUserCourses();
@@ -21,7 +24,9 @@ function UserCourseList() {
     .where(eq(CourseList?.createdBy,user?.primaryEmailAddress?.emailAddress))
     console.log(result)
     setCourseList(result);
+    setUserCourseList(result);
   }
+
   return (
     <div className='mt-10'>
       <h2 className='font-medium text-xl'>My AI Courses</h2>
