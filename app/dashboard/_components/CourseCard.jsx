@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { HiOutlineBookOpen } from 'react-icons/hi2'
 import { HiMiniEllipsisVertical } from 'react-icons/hi2'
 import DropdownOption from './DropDownOption'
@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { CourseList } from '@/configs/schema'
 import { db } from '@/configs/db'
 import { eq } from 'drizzle-orm'
+import Link from 'next/link'
 
 function CourseCard({course,refreshData}) {
 
@@ -22,8 +23,10 @@ function CourseCard({course,refreshData}) {
 
   return (
     <div className='shadow-sm rounded-lg border p-2 transition-all cursor-pointer mt-4'>
-      <Image src={course.courseBanner} width={300} height={200} 
-      className='w-full h-[200px] object-cover rounded-lg'/>
+      <Link href={'/course/'+course?.courseId}>
+        <Image src={course?.courseBanner} width={300} height={200} 
+        className='w-full h-[200px] object-cover rounded-lg'/>
+      </Link>
       <div className='p-2'>
         <h2 className='font-medium text-lg flex justify-between items-center'>{course?.courseOutput?.course_name} 
             <DropdownOption handleOnDelete={()=>handleOnDelete()}>
