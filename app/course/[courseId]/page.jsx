@@ -11,7 +11,6 @@ import React, { useEffect, useState } from 'react'
 function Course({params}) {
   const [course, setCourse] = useState();
 
-
         useEffect(()=> {
             params&&GetCourse();
         }, [params])
@@ -29,7 +28,6 @@ function Course({params}) {
       <Header/>
       <div className='px-10 p-10 md:px-20 lg:px-44'>
         <CourseBasicInfo course={course} edit={false} />
-
         <CourseDetail course={course} />
         <ChapterList course={course} edit={false} />
       </div>

@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { HiOutlinePuzzlePiece } from 'react-icons/hi2'
 import {Button} from '@/components/ui/button'
 import EditCourseBasicInfo from '../_components/EditCourseBasicInfo'
-import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import {storage} from '@/configs/firebaseConfig'
 import { eq } from 'drizzle-orm'
 import { db } from '@/configs/db'
 import { CourseList } from '@/configs/schema'
+import Link from 'next/link'
 
 
 function CourseBasicInfo({course, refreshData, edit=true}) {
@@ -51,7 +52,9 @@ function CourseBasicInfo({course, refreshData, edit=true}) {
             <p className='text-sm text-gray-400 mt-3'>{course?.courseOutput?.description}</p>
             <h2 className='font-medium mt-5 flex gap-2 items-center text-green-600'>
             <HiOutlinePuzzlePiece/>{course?.category}</h2>
+            {!edit &&<Link href={'/course/'+course?.courseId+"/start"}>
             <Button className="w-full bg-green-700 hover:bg-green-900 mt-10">Start</Button>
+            </Link>}
         </div>
         <div>
           <label htmlFor='upload-image'>
