@@ -12,10 +12,11 @@ const opts = {
 
 function ChapterContent({chapter, content}) {
     console.log(chapter);
+    console.log(content);
 
   return (
     <div className='p-10'>
-        <h2 className='font-medium text-2xl' >{chapter?.name}</h2>
+        <h2 className='font-medium text-2xl' >{chapter?.chapter_name}</h2>
         <p className='text-gray-500'>{chapter?.about}</p>
         
         {/* Video */}
@@ -27,19 +28,23 @@ function ChapterContent({chapter, content}) {
         </div>
 
         <div>
-            {content?.content?.map((item, index)=>(
+            {/* {content?.content?.map((item, index)=>( */}
                 <div className='p-5 bg-sky-50 mb-3 rounded-lg'>
-                    <h2 className='font-medium text-lg' >{item.title}</h2>
+                    <h2 className='font-medium text-lg' >{content?.content?.title}</h2>
+
+
                     {/* <p className='whitespace-pre-wrap'>{item?.description}</p> */}
-                    <ReactMarkdown>{item?.description}</ReactMarkdown>
-                    { item.codeExample&& 
+
+                    
+                    <ReactMarkdown>{content?.content?.description}</ReactMarkdown>
+                    { content?.content?.codeExample&& 
                     <div className='p-4 bg-black text-white rounded-medium mt-3'>
                         <pre>
                             <code>{item.codeExample}</code>
                         </pre>
                     </div>}
                 </div>
-            ))}
+            {/* ))} */}
         </div>
 
 

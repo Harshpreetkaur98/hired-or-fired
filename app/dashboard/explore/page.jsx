@@ -1,12 +1,13 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import {db} from '@/configs/db'
-import {CourseList} from 'react'
-import {CourseCard} from '../_components/CourseCard'
+import {CourseList} from '@/configs/schema'
+import CourseCard from '../_components/CourseCard'
+import {Button} from '@/components/ui/button'
 
 function Explore(){
 
-    const [courseList, setCourseList] = useState();
+    const [courseList, setCourseList] = useState([]);
     const[pageIndex, setPageIndex] = useState(0);
 
     useEffect(()=> {
@@ -28,8 +29,8 @@ function Explore(){
 
             <div className='grid grid-cols-2 lg:grid-cols-3 gap-5'>
                 {courseList?.map((course, index) => (
-                    <div>
-                        <CourseCard course={course} displayUser={true} />
+                    <div  key={course.id}>
+                        <CourseCard course={course} refreshData={() => GetAllCourse()}  displayUser={true} />
                     </div>
                 ))}
             </div>

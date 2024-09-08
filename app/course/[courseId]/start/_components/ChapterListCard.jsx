@@ -10,7 +10,7 @@ function ChapterListCard({chapter, index}) {
             '>{index + 1}</h2>
         </div>
         <div className='col-span-4'>
-            <h2 className='font-medium'>{chapter?.name}</h2>     
+            <h2 className='font-medium'>{chapter?.chapter_name}</h2>     
             <h2 className='flex item-center gap-2 text-sm text-primary'><HiOutlineClock />{chapter?.duration}</h2>       
         </div>
     </div>
